@@ -27,14 +27,14 @@ import type { ErrorResponse } from "@aws-cdk/aws-cloudfront/lib/distribution";
 import type { AwsProvider } from "@lift/providers";
 import { AwsConstruct } from "@lift/constructs/abstracts";
 import type { ConstructCommands } from "@lift/constructs";
+import type { ConstructSchema } from "@lift/constructs/StaticConstructInterface";
 import { log } from "../../utils/logger";
 import { s3Sync } from "../../utils/s3-sync";
 import ServerlessError from "../../utils/error";
 
-const STATIC_WEBSITE_DEFINITION = {
+export const STATIC_WEBSITE_DEFINITION = {
     type: "object",
     properties: {
-        type: { const: "static-website" },
         path: { type: "string" },
         domain: {
             anyOf: [
@@ -59,11 +59,11 @@ const STATIC_WEBSITE_DEFINITION = {
     required: ["path"],
 } as const;
 
-type Configuration = FromSchema<typeof STATIC_WEBSITE_DEFINITION>;
+export type StaticWebsiteConfiguration = FromSchema<typeof STATIC_WEBSITE_DEFINITION>;
 
 export class StaticWebsite extends AwsConstruct {
     public static type = "static-website";
-    public static schema = STATIC_WEBSITE_DEFINITION;
+    public static schema: ConstructSchema = STATIC_WEBSITE_DEFINITION;
     public static commands: ConstructCommands = {
         upload: {
             usage: "Upload files directly to S3 without going through a CloudFormation deployment.",
@@ -78,9 +78,9 @@ export class StaticWebsite extends AwsConstruct {
 
     constructor(
         scope: CdkConstruct,
-        private readonly id: string,
-        private readonly configuration: Configuration,
-        private readonly provider: AwsProvider
+        protected readonly id: string,
+        protected readonly configuration: StaticWebsiteConfiguration,
+        protected readonly provider: AwsProvider
     ) {
         super(scope, id);
 
