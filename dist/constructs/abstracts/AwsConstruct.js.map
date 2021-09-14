@@ -1,0 +1,1 @@
+{"version":3,"file":"AwsConstruct.js","sourceRoot":"","sources":["../../../src/constructs/abstracts/AwsConstruct.ts"],"names":[],"mappings":";;;AAAA,wCAA0D;AAI1D,MAAsB,YAAa,SAAQ,gBAAY;IACnD,MAAM,CAAC,MAAM,CAIT,QAAqB,EACrB,EAAU,EACV,aAAsC;QAEtC;;;;;;;;;WASG;QACH,OAAO,IAAI,IAAI,CAAC,QAAQ,CAAC,KAAK,EAAE,EAAE,EAAE,aAAa,EAAE,QAAQ,CAAC,CAAC;IACjE,CAAC;CAGJ;AAvBD,oCAuBC"}

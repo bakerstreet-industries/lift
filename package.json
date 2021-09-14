@@ -78,11 +78,10 @@
     "lint": "eslint .",
     "check-format": "prettier --check .",
     "type": "tsc --noEmit",
-    "build": "npx tscpaths -p tsconfig.release.json -s ./src -o ./dist/src && npx tsc -p tsconfig.release.json --emitDeclarationOnly",
+    "build": "npx tsc -p tsconfig.release.json && npx tscpaths -p tsconfig.release.json -s ./src -o ./dist/src && npx tsc -p tsconfig.release.json --emitDeclarationOnly",
     "build:bsi": "npm run build && cp dist/src/plugin.js dist/src/index.js",
     "watch": "nodemon",
-    "test": "jest",
-    "postinstall": "npm run build:bsi"
+    "test": "jest"
   },
   "lint-staged": {
     "*.{md,json,yml}": [
