@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DatabaseDynamoDBSingleTable = void 0;
 const core_1 = require("@aws-cdk/core");
 const aws_dynamodb_1 = require("@aws-cdk/aws-dynamodb");
-const abstracts_1 = require("@lift/constructs/abstracts");
+const abstracts_1 = require("../abstracts");
 const CloudFormation_1 = require("../../CloudFormation");
 const DATABASE_DEFINITION = {
     type: "object",

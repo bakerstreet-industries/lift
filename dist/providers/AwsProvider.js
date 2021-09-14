@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AwsProvider = void 0;
 const tslib_1 = require("tslib");
 const core_1 = require("@aws-cdk/core");
-const aws_1 = require("@lift/constructs/aws");
+const aws_1 = require("../constructs/aws");
 const lodash_1 = require("lodash");
 const aws_2 = require("../classes/aws");
 const CloudFormation_1 = require("../CloudFormation");

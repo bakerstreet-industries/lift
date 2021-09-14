@@ -7,7 +7,7 @@ const aws_apigatewayv2_1 = require("@aws-cdk/aws-apigatewayv2");
 const aws_lambda_1 = require("@aws-cdk/aws-lambda");
 const aws_events_1 = require("@aws-cdk/aws-events");
 const aws_iam_1 = require("@aws-cdk/aws-iam");
-const abstracts_1 = require("@lift/constructs/abstracts");
+const abstracts_1 = require("../abstracts");
 const error_1 = (0, tslib_1.__importDefault)(require("../../utils/error"));
 const WEBHOOK_DEFINITION = {
     type: "object",

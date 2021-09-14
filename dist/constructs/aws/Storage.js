@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Storage = void 0;
 const aws_s3_1 = require("@aws-cdk/aws-s3");
 const core_1 = require("@aws-cdk/core");
-const abstracts_1 = require("@lift/constructs/abstracts");
+const abstracts_1 = require("../abstracts");
 const CloudFormation_1 = require("../../CloudFormation");
 const STORAGE_DEFINITION = {
     type: "object",
