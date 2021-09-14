@@ -78,7 +78,7 @@
     "lint": "eslint .",
     "check-format": "prettier --check .",
     "type": "tsc --noEmit",
-    "build": "etsc && tscpaths -p tsconfig.json -s ./src -o ./dist/src && tsc --emitDeclarationOnly",
+    "build": "tscpaths -p tsconfig.json -s ./src -o ./dist/src && tsc --emitDeclarationOnly",
     "build:bsi": "npm run build && cp dist/src/plugin.js dist/src/index.js",
     "watch": "nodemon",
     "test": "jest",
