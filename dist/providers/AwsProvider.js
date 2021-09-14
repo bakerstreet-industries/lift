@@ -110,8 +110,10 @@ class AwsProvider {
     }
     maybeAddStackTags(serverless, stack) {
         const tags = serverless.configurationInput.provider.stackTags;
+        console.log('stackTags', tags);
         if (tags) {
             Object.keys(tags).forEach((key) => {
+                console.log('adding tag', key, '=', tags[key]);
                 core_1.Tags.of(stack).add(key, tags[key]);
             });
         }
