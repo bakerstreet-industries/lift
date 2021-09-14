@@ -1,8 +1,5 @@
 import type { CfnOutput } from "@aws-cdk/core";
-import { App, Stack } from "@aws-cdk/core";
-import { get, merge } from "lodash";
-import type { AwsCfInstruction, AwsLambdaVpcConfig } from "@serverless/typescript";
-import type { ProviderInterface } from "@lift/providers";
+import { App, Stack, Tags } from "@aws-cdk/core";
 import type { ConstructInterface, StaticConstructInterface } from "@lift/constructs";
 import {
     DatabaseDynamoDBSingleTable,
@@ -13,9 +10,12 @@ import {
     Vpc,
     Webhook,
 } from "@lift/constructs/aws";
+import type { ProviderInterface } from "@lift/providers";
+import type { AwsCfInstruction, AwsLambdaVpcConfig } from "@serverless/typescript";
+import { get, merge } from "lodash";
+import { awsRequest } from "../classes/aws";
 import { getStackOutput } from "../CloudFormation";
 import type { CloudformationTemplate, Provider as LegacyAwsProvider, Serverless } from "../types/serverless";
-import { awsRequest } from "../classes/aws";
 import ServerlessError from "../utils/error";
 
 const AWS_DEFINITION = {
@@ -72,6 +72,8 @@ export class AwsProvider implements ProviderInterface {
         this.legacyProvider = serverless.getProvider("aws");
         this.naming = this.legacyProvider.naming;
         this.region = serverless.getProvider("aws").getRegion();
+
+        this.maybeAddStackTags(this.serverless, this.stack);
         serverless.stack = this.stack;
     }
 
@@ -154,6 +156,15 @@ export class AwsProvider implements ProviderInterface {
         merge(this.serverless.service, {
             resources: this.app.synth().getStackByName(this.stack.stackName).template as CloudformationTemplate,
         });
+    }
+
+    private maybeAddStackTags(serverless: Serverless, stack: Stack) {
+        const tags = serverless.configurationInput.provider.tags;
+        if (tags) {
+            Object.keys(tags).forEach((key) => {
+                Tags.of(stack).add(key, tags[key]);
+            });
+        }
     }
 }
 
