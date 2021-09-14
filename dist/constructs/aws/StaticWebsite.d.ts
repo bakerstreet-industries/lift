@@ -1,4 +1,4 @@
-import type { Construct as CdkConstruct } from "@aws-cdk/core";
+import { Construct as CdkConstruct } from "@aws-cdk/core";
 import type { FromSchema } from "json-schema-to-ts";
 import type { AwsProvider } from "@lift/providers";
 import { AwsConstruct } from "@lift/constructs/abstracts";
@@ -92,6 +92,7 @@ export declare class StaticWebsite extends AwsConstruct {
     private readonly cnameOutput;
     private readonly distributionIdOutput;
     constructor(scope: CdkConstruct, id: string, configuration: Configuration, provider: AwsProvider);
+    private maybeAddStackTags;
     variables(): Record<string, unknown>;
     outputs(): Record<string, () => Promise<string | undefined>>;
     postDeploy(): Promise<void>;

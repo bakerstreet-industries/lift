@@ -1,5 +1,5 @@
 import type { CfnOutput } from "@aws-cdk/core";
-import { App, Stack, Tags } from "@aws-cdk/core";
+import { App, Stack } from "@aws-cdk/core";
 import type { ConstructInterface, StaticConstructInterface } from "@lift/constructs";
 import {
     DatabaseDynamoDBSingleTable,
@@ -11,7 +11,7 @@ import {
     Webhook,
 } from "@lift/constructs/aws";
 import type { ProviderInterface } from "@lift/providers";
-import type { AwsCfInstruction, AwsLambdaVpcConfig } from "@serverless/typescript";
+import type { AwsCfInstruction, AwsLambdaVpcConfig, AwsResourceTags } from "@serverless/typescript";
 import { get, merge } from "lodash";
 import { awsRequest } from "../classes/aws";
 import { getStackOutput } from "../CloudFormation";
@@ -64,6 +64,7 @@ export class AwsProvider implements ProviderInterface {
         getRestApiLogicalId: () => string;
         getHttpApiLogicalId: () => string;
     };
+    public readonly stackTags?: AwsResourceTags | undefined;
 
     constructor(private readonly serverless: Serverless) {
         this.stackName = serverless.getProvider("aws").naming.getStackName();
@@ -72,8 +73,7 @@ export class AwsProvider implements ProviderInterface {
         this.legacyProvider = serverless.getProvider("aws");
         this.naming = this.legacyProvider.naming;
         this.region = serverless.getProvider("aws").getRegion();
-
-        this.maybeAddStackTags(this.serverless, this.stack);
+        this.stackTags = serverless.configurationInput.provider.stackTags;
         serverless.stack = this.stack;
     }
 
@@ -156,17 +156,6 @@ export class AwsProvider implements ProviderInterface {
         merge(this.serverless.service, {
             resources: this.app.synth().getStackByName(this.stack.stackName).template as CloudformationTemplate,
         });
-    }
-
-    private maybeAddStackTags(serverless: Serverless, stack: Stack) {
-        const tags = serverless.configurationInput.provider.stackTags;
-        console.log("stackTags", tags);
-        if (tags) {
-            Object.keys(tags).forEach((key) => {
-                console.log("adding tag", key, "=", tags[key]);
-                Tags.of(stack).add(key, tags[key]);
-            });
-        }
     }
 }
 

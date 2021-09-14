@@ -6,6 +6,7 @@ const aws_s3_1 = require("@aws-cdk/aws-s3");
 const aws_cloudfront_1 = require("@aws-cdk/aws-cloudfront");
 const cloudfront = (0, tslib_1.__importStar)(require("@aws-cdk/aws-cloudfront"));
 const core_1 = require("@aws-cdk/core");
+const core_2 = require("@aws-cdk/core");
 const chalk_1 = (0, tslib_1.__importDefault)(require("chalk"));
 const aws_cloudfront_origins_1 = require("@aws-cdk/aws-cloudfront-origins");
 const acm = (0, tslib_1.__importStar)(require("@aws-cdk/aws-certificatemanager"));
@@ -54,7 +55,7 @@ class StaticWebsite extends abstracts_1.AwsConstruct {
         }
         const bucket = new aws_s3_1.Bucket(this, "Bucket", {
             // For a static website, the content is code that should be versioned elsewhere
-            removalPolicy: core_1.RemovalPolicy.DESTROY,
+            removalPolicy: core_2.RemovalPolicy.DESTROY,
         });
         const cloudFrontOAI = new aws_cloudfront_1.OriginAccessIdentity(this, "OriginAccessIdentity", {
             comment: `Identity that represents CloudFront for the ${id} static website.`,
@@ -93,7 +94,7 @@ class StaticWebsite extends abstracts_1.AwsConstruct {
             domainNames: domains,
         });
         // CloudFormation outputs
-        this.bucketNameOutput = new core_1.CfnOutput(this, "BucketName", {
+        this.bucketNameOutput = new core_2.CfnOutput(this, "BucketName", {
             description: "Name of the bucket that stores the static website.",
             value: bucket.bucketName,
         });
@@ -102,18 +103,29 @@ class StaticWebsite extends abstracts_1.AwsConstruct {
             // In case of multiple domains, we take the first one
             websiteDomain = typeof configuration.domain === "string" ? configuration.domain : configuration.domain[0];
         }
-        this.domainOutput = new core_1.CfnOutput(this, "Domain", {
+        this.domainOutput = new core_2.CfnOutput(this, "Domain", {
             description: "Website domain name.",
             value: websiteDomain,
         });
-        this.cnameOutput = new core_1.CfnOutput(this, "CloudFrontCName", {
+        this.cnameOutput = new core_2.CfnOutput(this, "CloudFrontCName", {
             description: "CloudFront CNAME.",
             value: this.distribution.distributionDomainName,
         });
-        this.distributionIdOutput = new core_1.CfnOutput(this, "DistributionId", {
+        this.distributionIdOutput = new core_2.CfnOutput(this, "DistributionId", {
             description: "ID of the CloudFront distribution.",
             value: this.distribution.distributionId,
         });
+        this.maybeAddStackTags(provider, scope);
+    }
+    maybeAddStackTags(provider, scope) {
+        const tags = provider.stackTags;
+        console.log("stackTags", tags);
+        if (tags) {
+            Object.keys(tags).forEach((key) => {
+                console.log("adding tag", key, "=", tags[key]);
+                core_1.Tags.of(scope).add(key, tags[key]);
+            });
+        }
     }
     variables() {
         return {
@@ -197,7 +209,7 @@ class StaticWebsite extends abstracts_1.AwsConstruct {
             }
             return {
                 httpStatus: 404,
-                ttl: core_1.Duration.seconds(0),
+                ttl: core_2.Duration.seconds(0),
                 responseHttpStatus: 404,
                 responsePagePath: errorPath,
             };
@@ -208,7 +220,7 @@ class StaticWebsite extends abstracts_1.AwsConstruct {
          */
         return {
             httpStatus: 404,
-            ttl: core_1.Duration.seconds(0),
+            ttl: core_2.Duration.seconds(0),
             responseHttpStatus: 200,
             responsePagePath: "/index.html",
         };

@@ -22,7 +22,7 @@ class AwsProvider {
         this.legacyProvider = serverless.getProvider("aws");
         this.naming = this.legacyProvider.naming;
         this.region = serverless.getProvider("aws").getRegion();
-        this.maybeAddStackTags(this.serverless, this.stack);
+        this.stackTags = serverless.configurationInput.provider.stackTags;
         serverless.stack = this.stack;
     }
     static registerConstructs(...constructClasses) {
@@ -107,16 +107,6 @@ class AwsProvider {
         (0, lodash_1.merge)(this.serverless.service, {
             resources: this.app.synth().getStackByName(this.stack.stackName).template,
         });
-    }
-    maybeAddStackTags(serverless, stack) {
-        const tags = serverless.configurationInput.provider.stackTags;
-        console.log('stackTags', tags);
-        if (tags) {
-            Object.keys(tags).forEach((key) => {
-                console.log('adding tag', key, '=', tags[key]);
-                core_1.Tags.of(stack).add(key, tags[key]);
-            });
-        }
     }
 }
 exports.AwsProvider = AwsProvider;

@@ -2,7 +2,7 @@ import type { CfnOutput } from "@aws-cdk/core";
 import { Stack } from "@aws-cdk/core";
 import type { ConstructInterface, StaticConstructInterface } from "@lift/constructs";
 import type { ProviderInterface } from "@lift/providers";
-import type { AwsCfInstruction, AwsLambdaVpcConfig } from "@serverless/typescript";
+import type { AwsCfInstruction, AwsLambdaVpcConfig, AwsResourceTags } from "@serverless/typescript";
 import type { Serverless } from "../types/serverless";
 export declare class AwsProvider implements ProviderInterface {
     private readonly serverless;
@@ -28,6 +28,7 @@ export declare class AwsProvider implements ProviderInterface {
         getRestApiLogicalId: () => string;
         getHttpApiLogicalId: () => string;
     };
+    readonly stackTags?: AwsResourceTags | undefined;
     constructor(serverless: Serverless);
     createConstruct(type: string, id: string): ConstructInterface;
     addFunction(functionName: string, functionConfig: unknown): void;
@@ -51,5 +52,4 @@ export declare class AwsProvider implements ProviderInterface {
      */
     request<Input, Output>(service: string, method: string, params: Input): Promise<Output>;
     appendCloudformationResources(): void;
-    private maybeAddStackTags;
 }

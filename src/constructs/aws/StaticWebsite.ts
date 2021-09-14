@@ -10,6 +10,7 @@ import {
 } from "@aws-cdk/aws-cloudfront";
 import * as cloudfront from "@aws-cdk/aws-cloudfront";
 import type { Construct as CdkConstruct } from "@aws-cdk/core";
+import { Tags } from "@aws-cdk/core";
 import { CfnOutput, Duration, RemovalPolicy } from "@aws-cdk/core";
 import type { FromSchema } from "json-schema-to-ts";
 import chalk from "chalk";
@@ -153,6 +154,19 @@ export class StaticWebsite extends AwsConstruct {
             description: "ID of the CloudFront distribution.",
             value: this.distribution.distributionId,
         });
+
+        this.maybeAddStackTags(provider, scope);
+    }
+
+    private maybeAddStackTags(provider: AwsProvider, scope: AwsConstruct) {
+        const tags = provider.stackTags;
+        console.log("stackTags", tags);
+        if (tags) {
+            Object.keys(tags).forEach((key) => {
+                console.log("adding tag", key, "=", tags[key]);
+                Tags.of(scope).add(key, tags[key]);
+            });
+        }
     }
 
     variables(): Record<string, unknown> {
