@@ -159,7 +159,7 @@ export class AwsProvider implements ProviderInterface {
     }
 
     private maybeAddStackTags(serverless: Serverless, stack: Stack) {
-        const tags = serverless.configurationInput.provider.tags;
+        const tags = serverless.configurationInput.provider.stackTags;
         if (tags) {
             Object.keys(tags).forEach((key) => {
                 Tags.of(stack).add(key, tags[key]);
