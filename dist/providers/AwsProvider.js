@@ -25,6 +25,7 @@ class AwsProvider {
         this.region = serverless.getProvider("aws").getRegion();
         this.stackTags = serverless.configurationInput.provider.stackTags;
         this.custom = (_a = serverless.configurationInput.custom) === null || _a === void 0 ? void 0 : _a.lift;
+        console.log(serverless.configurationInput.custom);
         serverless.stack = this.stack;
     }
     static registerConstructs(...constructClasses) {
