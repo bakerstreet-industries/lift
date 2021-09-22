@@ -4,6 +4,12 @@ import type { ConstructInterface, StaticConstructInterface } from "@lift/constru
 import type { ProviderInterface } from "@lift/providers";
 import type { AwsCfInstruction, AwsLambdaVpcConfig, AwsResourceTags } from "@serverless/typescript";
 import type { Serverless } from "../types/serverless";
+interface ILiftCustom {
+    cachePolicy: Array<{
+        matcher: string;
+        policy: string;
+    }>;
+}
 export declare class AwsProvider implements ProviderInterface {
     private readonly serverless;
     static type: string;
@@ -29,6 +35,7 @@ export declare class AwsProvider implements ProviderInterface {
         getHttpApiLogicalId: () => string;
     };
     readonly stackTags?: AwsResourceTags | undefined;
+    readonly custom?: ILiftCustom;
     constructor(serverless: Serverless);
     createConstruct(type: string, id: string): ConstructInterface;
     addFunction(functionName: string, functionConfig: unknown): void;
@@ -53,3 +60,4 @@ export declare class AwsProvider implements ProviderInterface {
     request<Input, Output>(service: string, method: string, params: Input): Promise<Output>;
     appendCloudformationResources(): void;
 }
+export {};

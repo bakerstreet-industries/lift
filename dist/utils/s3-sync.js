@@ -17,9 +17,16 @@ const stat = util.promisify(fs.stat);
  * @return True if some changes were uploaded.
  */
 async function s3Sync({ aws, localPath, targetPathPrefix, bucketName, }) {
+    var _a;
     let hasChanges = false;
     const filesToUpload = await listFilesRecursively(localPath);
     const existingS3Objects = await s3ListAll(aws, bucketName, targetPathPrefix);
+    console.log("aws custom", aws.custom);
+    const fileMatchers = (_a = aws.custom) === null || _a === void 0 ? void 0 : _a.cachePolicy.map((item) => {
+        console.log("cache policy item", item);
+        return item;
+    });
+    console.log(fileMatchers);
     // Upload files by chunks
     let skippedFiles = 0;
     for (const batch of (0, lodash_1.chunk)(filesToUpload, 2)) {
@@ -29,6 +36,7 @@ async function s3Sync({ aws, localPath, targetPathPrefix, bucketName, }) {
             // Check that the file isn't already uploaded
             if (targetKey in existingS3Objects) {
                 const existingObject = existingS3Objects[targetKey];
+                console.log(existingObject);
                 const etag = computeS3ETag(fileContent);
                 if (etag === existingObject.ETag) {
                     skippedFiles++;

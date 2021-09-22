@@ -15,6 +15,7 @@ const AWS_DEFINITION = {
 };
 class AwsProvider {
     constructor(serverless) {
+        var _a;
         this.serverless = serverless;
         this.stackName = serverless.getProvider("aws").naming.getStackName();
         this.app = new core_1.App();
@@ -23,6 +24,7 @@ class AwsProvider {
         this.naming = this.legacyProvider.naming;
         this.region = serverless.getProvider("aws").getRegion();
         this.stackTags = serverless.configurationInput.provider.stackTags;
+        this.custom = (_a = serverless.configurationInput.custom) === null || _a === void 0 ? void 0 : _a.lift;
         serverless.stack = this.stack;
     }
     static registerConstructs(...constructClasses) {

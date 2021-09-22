@@ -1,4 +1,4 @@
-import { Construct as CdkConstruct } from "@aws-cdk/core";
+import type { Construct as CdkConstruct } from "@aws-cdk/core";
 import type { FromSchema } from "json-schema-to-ts";
 import type { AwsProvider } from "@lift/providers";
 import { AwsConstruct } from "@lift/constructs/abstracts";
