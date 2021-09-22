@@ -24,6 +24,9 @@ const AWS_DEFINITION = {
     additionalProperties: false,
 } as const;
 
+interface ILiftCustom {
+    cachePolicy: Array<{ matcher: string; policy: string }>;
+}
 export class AwsProvider implements ProviderInterface {
     public static type = "aws";
     public static schema = AWS_DEFINITION;
@@ -66,6 +69,8 @@ export class AwsProvider implements ProviderInterface {
     };
     public readonly stackTags?: AwsResourceTags | undefined;
 
+    public readonly custom?: ILiftCustom;
+
     constructor(private readonly serverless: Serverless) {
         this.stackName = serverless.getProvider("aws").naming.getStackName();
         this.app = new App();
@@ -74,6 +79,7 @@ export class AwsProvider implements ProviderInterface {
         this.naming = this.legacyProvider.naming;
         this.region = serverless.getProvider("aws").getRegion();
         this.stackTags = serverless.configurationInput.provider.stackTags;
+        this.custom = serverless.configurationInput.custom?.lift as ILiftCustom;
         serverless.stack = this.stack;
     }
 

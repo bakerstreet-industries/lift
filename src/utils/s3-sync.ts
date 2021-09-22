@@ -41,6 +41,14 @@ export async function s3Sync({
     const filesToUpload: string[] = await listFilesRecursively(localPath);
     const existingS3Objects = await s3ListAll(aws, bucketName, targetPathPrefix);
 
+    console.log("aws custom", aws.custom);
+    const fileMatchers = aws.custom?.cachePolicy.map((item) => {
+        console.log("cache policy item", item);
+
+        return item;
+    });
+    console.log(fileMatchers);
+
     // Upload files by chunks
     let skippedFiles = 0;
     for (const batch of chunk(filesToUpload, 2)) {
@@ -52,6 +60,7 @@ export async function s3Sync({
                 // Check that the file isn't already uploaded
                 if (targetKey in existingS3Objects) {
                     const existingObject = existingS3Objects[targetKey];
+                    console.log(existingObject);
                     const etag = computeS3ETag(fileContent);
                     if (etag === existingObject.ETag) {
                         skippedFiles++;
