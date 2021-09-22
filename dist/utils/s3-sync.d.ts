@@ -13,5 +13,5 @@ export declare function s3Sync({ aws, localPath, targetPathPrefix, bucketName, }
 }): Promise<{
     hasChanges: boolean;
 }>;
-export declare function s3Put(aws: AwsProvider, bucket: string, key: string, fileContent: Buffer): Promise<void>;
+export declare function s3Put(aws: AwsProvider, bucket: string, key: string, fileContent: Buffer, cacheControl?: string): Promise<void>;
 export declare function computeS3ETag(fileContent: Buffer): string;

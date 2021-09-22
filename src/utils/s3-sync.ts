@@ -41,13 +41,9 @@ export async function s3Sync({
     const filesToUpload: string[] = await listFilesRecursively(localPath);
     const existingS3Objects = await s3ListAll(aws, bucketName, targetPathPrefix);
 
-    console.log("aws custom", aws.custom);
     const fileMatchers = aws.custom?.cachePolicy.map((item) => {
-        console.log("cache policy item", item);
-
         return item;
     });
-    console.log(fileMatchers);
 
     // Upload files by chunks
     let skippedFiles = 0;
@@ -55,12 +51,12 @@ export async function s3Sync({
         await Promise.all(
             batch.map(async (file) => {
                 const targetKey = targetPathPrefix !== undefined ? path.join(targetPathPrefix, file) : file;
-                const fileContent = fs.readFileSync(path.join(localPath, file));
+                const fullFilePath = path.join(localPath, file);
+                const fileContent = fs.readFileSync(fullFilePath);
 
                 // Check that the file isn't already uploaded
                 if (targetKey in existingS3Objects) {
                     const existingObject = existingS3Objects[targetKey];
-                    console.log(existingObject);
                     const etag = computeS3ETag(fileContent);
                     if (etag === existingObject.ETag) {
                         skippedFiles++;
@@ -69,8 +65,19 @@ export async function s3Sync({
                     }
                 }
 
-                console.log(`Uploading ${file}`);
-                await s3Put(aws, bucketName, targetKey, fileContent);
+                let cachePolicy: string | undefined;
+                if (fileMatchers) {
+                    for (let i = 0; i < fileMatchers.length; i++) {
+                        const item = fileMatchers[i];
+                        if (RegExp(item.matcher).exec(fullFilePath)) {
+                            cachePolicy = item.policy;
+                            break;
+                        }
+                    }
+                }
+                // eslint-disable-next-line
+                console.log(`Uploading ${file} with cache policy: ${cachePolicy || ""}`);
+                await s3Put(aws, bucketName, targetKey, fileContent, cachePolicy);
                 hasChanges = true;
             })
         );
@@ -142,7 +149,13 @@ function findKeysToDelete(existing: string[], target: string[]): string[] {
     return existing.filter((key) => target.indexOf(key) === -1);
 }
 
-export async function s3Put(aws: AwsProvider, bucket: string, key: string, fileContent: Buffer): Promise<void> {
+export async function s3Put(
+    aws: AwsProvider,
+    bucket: string,
+    key: string,
+    fileContent: Buffer,
+    cacheControl?: string
+): Promise<void> {
     let contentType = lookup(key);
     if (contentType === false) {
         contentType = "application/octet-stream";
@@ -152,6 +165,7 @@ export async function s3Put(aws: AwsProvider, bucket: string, key: string, fileC
         Key: key,
         Body: fileContent,
         ContentType: contentType,
+        CacheControl: cacheControl,
     });
 }
 
