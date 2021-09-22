@@ -80,7 +80,7 @@ export class AwsProvider implements ProviderInterface {
         this.region = serverless.getProvider("aws").getRegion();
         this.stackTags = serverless.configurationInput.provider.stackTags;
         this.custom = serverless.configurationInput.custom?.lift as ILiftCustom;
-        console.log(serverless.configurationInput.custom);
+        console.log(JSON.stringify(serverless.configurationInput.custom));
         serverless.stack = this.stack;
     }
 
