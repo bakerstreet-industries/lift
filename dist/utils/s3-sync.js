@@ -44,7 +44,7 @@ async function s3Sync({ aws, localPath, targetPathPrefix, bucketName, }) {
             if (fileMatchers) {
                 for (let i = 0; i < fileMatchers.length; i++) {
                     const item = fileMatchers[i];
-                    if (fullFilePath.match(item.matcher)) {
+                    if (RegExp(item.matcher).exec(fullFilePath)) {
                         cachePolicy = item.policy;
                         break;
                     }
